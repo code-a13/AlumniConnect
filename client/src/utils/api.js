@@ -1,13 +1,16 @@
 import axios from 'axios';
 
+// 1. POINT TO LIVE RENDER SERVER (Not Localhost)
+// This fixes the mobile login issue immediately.
 const api = axios.create({
-    baseURL: 'http://localhost:5000/api', // This points to your Backend
+    baseURL: 'https://alumniconnect-ub5c.onrender.com/api', 
     headers: {
         'Content-Type': 'application/json'
     }
 });
 
-// Automatically add Token to every request if we are logged in
+// 2. TOKEN INTERCEPTOR (The Security Stamp)
+// Automatically adds the "Authorization" header to every request if you are logged in.
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem('token');
     if (token) {
