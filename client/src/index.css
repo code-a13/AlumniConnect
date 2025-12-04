@@ -1,0 +1,260 @@
+/* Base Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #f3f4f6; /* Light Grey Background */
+  /* Remove flex centering from here so Dashboard can be full width */
+  min-height: 100vh;
+}
+
+/* --- Login Page Styles --- */
+
+/* Create a specific wrapper for Login Page Centering */
+.login-page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 450px; /* Increased width slightly */
+  background: white;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border-top: 6px solid #d4af37; /* GOLD Top Border */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Logo Section */
+.logo-section {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* BIGGER LOGO */
+.logo-img {
+  width: 180px; /* Increased from 120px to 180px */
+  margin-bottom: 15px;
+}
+
+.brand-title {
+  color: #0f284e; /* NAVY BLUE */
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.brand-subtitle {
+  color: #888;
+  font-size: 14px;
+}
+
+/* Form Styles */
+.form-group {
+  width: 100%;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+}
+
+.form-input {
+  width: 100%;
+  padding: 14px 15px 14px 45px; /* Increased padding */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.form-input:focus {
+  border-color: #0f284e;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(15, 40, 78, 0.1);
+}
+
+/* Button */
+.btn-login {
+  width: 100%;
+  padding: 14px;
+  background-color: #0f284e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-login:hover {
+  background-color: #1a3b6e;
+}
+
+/* Footer */
+.footer-text {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.link-gold {
+  color: #d4af37;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+}
+.link-gold:hover {
+  text-decoration: underline;
+}
+
+/* --- SIDEBAR LAYOUT STYLES --- */
+
+.dashboard-layout {
+  display: flex;
+  height: 100vh;
+  background-color: #f3f4f6;
+  overflow: hidden; /* Prevent full page scroll */
+}
+
+/* Sidebar Styling */
+.sidebar {
+  width: 260px; /* Fixed width */
+  background-color: #0f284e; /* Navy Blue */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+  flex-shrink: 0; /* Don't shrink */
+}
+
+.sidebar-header {
+  padding: 25px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar-title {
+  color: #d4af37; /* GOLD */
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.sidebar-nav {
+  padding: 20px 10px;
+  flex-grow: 1; /* Pushes footer down */
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 20px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: #cfcfcf;
+}
+
+.nav-item:hover {
+  background-color: rgba(255,255,255,0.1);
+  color: white;
+  transform: translateX(5px);
+}
+
+.nav-item.active {
+  background-color: #d4af37; /* GOLD Active */
+  color: #0f284e; /* Navy Text */
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.sidebar-footer {
+  padding: 20px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  color: #ff6b6b;
+  border: 1px solid #ff6b6b;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+
+.logout-btn:hover {
+  background: #ff6b6b;
+  color: white;
+}
+
+/* --- MAIN CONTENT AREA --- */
+
+
+/* Make it responsive: On mobile, remove margin */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+  }
+}
+.header-welcome {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+/* BIG CARDS STYLING */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+.stat-card {
+  background: white;
+  padding: 30px; /* Big padding */
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  border-left: 5px solid #d4af37; /* Gold accent */
+  transition: transform 0.3s;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+.stat-label {
+  color: #888;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.stat-value {
+  color: #0f284e;
+  font-size: 32px; /* BIG Font */
+  font-weight: bold;
+}
