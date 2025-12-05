@@ -104,12 +104,17 @@ a {
   margin-bottom: 30px;
 }
 
+/* --- LOGO FIX: CIRCULAR STYLE --- */
 .logo-img {
-  width: 140px; /* Perfect size */
-  height: auto;
-  object-fit: contain; /* Prevents stretching */
+  width: 100px; /* Fixed Width */
+  height: 100px; /* Fixed Height (Same as width) */
+  object-fit: cover; /* Prevents stretching */
+  border-radius: 50%; /* MAKES IT ROUND */
+  border: 3px solid var(--primary-gold); /* Gold Border for Premium Look */
+  padding: 2px; /* Space between image and border */
   margin-bottom: 15px;
   filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+  background: white;
 }
 
 .brand-title {
@@ -389,8 +394,10 @@ a {
     margin: 10px;
   }
   
+  /* --- LOGO SIZE ON MOBILE --- */
   .logo-img {
-    width: 110px;
+    width: 90px;
+    height: 90px;
   }
   
   .brand-title {
