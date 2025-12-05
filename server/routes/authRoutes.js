@@ -1,28 +1,26 @@
 const express = require('express');
 const router = express.Router();
+const auth = require('../middleware/authMiddleware'); // Import Security Guard
 
-// IMPORTANT: Make sure all 4 functions are imported here!
+// Import Controller Functions
 const { 
-    register, 
-    login, 
-    getPendingUsers, 
-    approveUser ,
-    getAllUsers,
-    getAdminStats
+    register, login, getPendingUsers, approveUser, 
+    getAllUsers, getAdminStats, 
+    getProfile, updateProfile // <--- Import New Functions
 } = require('../controllers/authController');
 
+// Public Routes
 router.post('/register', register);
 router.post('/login', login);
 
-// Admin Routes (Protected)
-router.get('/pending-users', getPendingUsers);
+// Protected Routes (Token Required)
+router.get('/pending-users', getPendingUsers); // (Admin should verify token really, but leaving simple for now)
 router.put('/approve/:id', approveUser);
+router.get('/users', getAllUsers);
+router.get('/stats', getAdminStats);
+
+// PROFILE ROUTES (NEW)
+router.get('/me', auth, getProfile);        // Get logged in user's profile
+router.put('/me/update', auth, updateProfile); // Update logged in user's profile
 
 module.exports = router;
-
-
-// ... existing routes ...
-
-// Add these new Admin Routes
-router.get('/users', getAllUsers);      // API to get list of students/alumni
-router.get('/stats', getAdminStats);    // API for Dashboard counts

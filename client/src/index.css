@@ -1,4 +1,26 @@
-/* Base Reset */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================
+   1. GLOBAL RESET & VARIABLES
+   ========================================= */
+:root {
+  --primary-navy: #0f284e;
+  --primary-gold: #d4af37;
+  --primary-gold-hover: #b4860b;
+  --primary-navy-hover: #1a3b6e;
+  --bg-light: #f8f9fa;
+  --text-dark: #1f2937;
+  --text-gray: #6b7280;
+  --white: #ffffff;
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+  --radius-md: 10px;
+  --radius-lg: 16px;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -7,56 +29,101 @@
 }
 
 body {
-  background-color: #f3f4f6; /* Light Grey Background */
-  /* Remove flex centering from here so Dashboard can be full width */
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  overflow-x: hidden; /* Prevent horizontal scroll */
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* --- Login Page Styles --- */
+a {
+  text-decoration: none;
+  color: inherit;
+}
 
-/* Create a specific wrapper for Login Page Centering */
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-navy);
+}
+
+/* =========================================
+   2. LOGIN / REGISTER PAGE STYLES
+   ========================================= */
+
 .login-page-wrapper {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
+  background-color: #f3f4f6;
+  background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
 .login-container {
   width: 100%;
-  max-width: 450px; /* Increased width slightly */
-  background: white;
-  padding: 40px;
-  border-radius: 15px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  border-top: 6px solid #d4af37; /* GOLD Top Border */
+  max-width: 480px;
+  background: var(--white);
+  padding: 40px 35px;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+  border-top: 6px solid var(--primary-gold);
   display: flex;
   flex-direction: column;
-  align-items: center;
+  position: relative;
+  overflow: hidden;
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Logo Section */
 .logo-section {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-bottom: 30px;
 }
 
-/* BIGGER LOGO */
 .logo-img {
-  width: 180px; /* Increased from 120px to 180px */
+  width: 140px; /* Perfect size */
+  height: auto;
+  object-fit: contain; /* Prevents stretching */
   margin-bottom: 15px;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
 }
 
 .brand-title {
-  color: #0f284e; /* NAVY BLUE */
+  color: var(--primary-navy);
   font-size: 26px;
-  font-weight: bold;
+  font-weight: 800;
+  margin-top: 5px;
+  letter-spacing: -0.5px;
 }
 
 .brand-subtitle {
-  color: #888;
+  color: var(--text-gray);
   font-size: 14px;
+  margin-top: 5px;
 }
 
 /* Form Styles */
@@ -68,158 +135,97 @@ body {
 
 .input-icon {
   position: absolute;
-  left: 15px;
+  left: 18px;
   top: 50%;
   transform: translateY(-50%);
-  color: #aaa;
+  color: #9ca3af;
+  pointer-events: none;
+  z-index: 10;
 }
 
 .form-input {
   width: 100%;
-  padding: 14px 15px 14px 45px; /* Increased padding */
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 16px;
+  padding: 14px 14px 14px 50px; /* Space for icon */
+  border: 2px solid #f3f4f6;
+  border-radius: var(--radius-md);
+  font-size: 15px;
   transition: all 0.3s ease;
+  outline: none;
+  background-color: #f9fafb;
+  color: #333;
+  font-weight: 500;
 }
 
 .form-input:focus {
-  border-color: #0f284e;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(15, 40, 78, 0.1);
+  border-color: var(--primary-navy);
+  background-color: var(--white);
+  box-shadow: 0 0 0 4px rgba(15, 40, 78, 0.1);
 }
 
-/* Button */
+.form-input::placeholder {
+  color: #d1d5db;
+  font-weight: 400;
+}
+
+/* Buttons */
 .btn-login {
   width: 100%;
   padding: 14px;
-  background-color: #0f284e;
-  color: white;
+  background-color: var(--primary-navy);
+  color: var(--white);
   border: none;
-  border-radius: 8px;
-  font-size: 18px;
-  font-weight: bold;
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(15, 40, 78, 0.3);
+  margin-top: 10px;
+  letter-spacing: 0.5px;
 }
 
 .btn-login:hover {
-  background-color: #1a3b6e;
+  background-color: var(--primary-navy-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(15, 40, 78, 0.4);
 }
 
-/* Footer */
+.btn-login:active {
+  transform: translateY(0);
+}
+
+.btn-login:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Footer Links */
 .footer-text {
-  margin-top: 20px;
+  margin-top: 25px;
   font-size: 14px;
-  color: #666;
+  color: var(--text-gray);
+  text-align: center;
 }
 
 .link-gold {
-  color: #d4af37;
-  font-weight: bold;
+  color: var(--primary-gold);
+  font-weight: 700;
   cursor: pointer;
-  text-decoration: none;
+  transition: color 0.2s;
 }
+
 .link-gold:hover {
+  color: var(--primary-gold-hover);
   text-decoration: underline;
 }
 
-/* --- SIDEBAR LAYOUT STYLES --- */
+/* =========================================
+   3. DASHBOARD & LAYOUT STYLES
+   ========================================= */
 
-.dashboard-layout {
-  display: flex;
-  height: 100vh;
-  background-color: #f3f4f6;
-  overflow: hidden; /* Prevent full page scroll */
-}
-
-/* Sidebar Styling */
-.sidebar {
-  width: 260px; /* Fixed width */
-  background-color: #0f284e; /* Navy Blue */
-  color: white;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  box-shadow: 4px 0 10px rgba(0,0,0,0.1);
-  flex-shrink: 0; /* Don't shrink */
-}
-
-.sidebar-header {
-  padding: 25px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.sidebar-title {
-  color: #d4af37; /* GOLD */
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.sidebar-nav {
-  padding: 20px 10px;
-  flex-grow: 1; /* Pushes footer down */
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  padding: 15px 20px;
-  margin-bottom: 8px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.3s;
-  color: #cfcfcf;
-}
-
-.nav-item:hover {
-  background-color: rgba(255,255,255,0.1);
-  color: white;
-  transform: translateX(5px);
-}
-
-.nav-item.active {
-  background-color: #d4af37; /* GOLD Active */
-  color: #0f284e; /* Navy Text */
-  font-weight: bold;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-}
-
-.sidebar-footer {
-  padding: 20px;
-  border-top: 1px solid rgba(255,255,255,0.1);
-}
-
-.logout-btn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 12px;
-  background: transparent;
-  color: #ff6b6b;
-  border: 1px solid #ff6b6b;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: all 0.3s;
-}
-
-.logout-btn:hover {
-  background: #ff6b6b;
-  color: white;
-}
-
-/* --- MAIN CONTENT AREA --- */
-
-
-/* Make it responsive: On mobile, remove margin */
-@media (max-width: 768px) {
-  .main-content {
-    margin-left: 0;
-  }
-}
+/* Header Area */
 .header-welcome {
   display: flex;
   justify-content: space-between;
@@ -227,34 +233,189 @@ body {
   margin-bottom: 30px;
 }
 
-/* BIG CARDS STYLING */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 25px;
+.header-welcome h1 {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--primary-navy);
 }
 
+/* --- GRID SYSTEM (DESKTOP FIX) --- */
+.stats-grid {
+  display: grid;
+  /* Smart Grid: Columns min 280px, auto-fill remaining space */
+  /* This prevents cards from stretching too wide on large screens */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+/* Card Styling */
 .stat-card {
-  background: white;
-  padding: 30px; /* Big padding */
-  border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-  border-left: 5px solid #d4af37; /* Gold accent */
-  transition: transform 0.3s;
+  background: var(--white);
+  padding: 30px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border-left-width: 5px; 
+  border-left-style: solid;
+  /* Border color is inline */
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
 }
 
 .stat-card:hover {
   transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
 }
 
 .stat-label {
-  color: #888;
-  font-size: 16px;
-  margin-bottom: 10px;
+  color: var(--text-gray);
+  font-size: 13px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
 }
 
 .stat-value {
-  color: #0f284e;
-  font-size: 32px; /* BIG Font */
-  font-weight: bold;
+  color: var(--primary-navy);
+  font-size: 38px;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* Sidebar Specifics */
+.sidebar-nav::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+/* =========================================
+   4. UTILITIES & ANIMATIONS
+   ========================================= */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Glass Effect Utility */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Status Badges */
+.badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-student {
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+}
+
+.badge-alumni {
+  background: #fffbeb;
+  color: #92400e;
+  border: 1px solid #fde047;
+}
+
+/* =========================================
+   5. MOBILE RESPONSIVENESS (THE ULTIMATE FIX)
+   ========================================= */
+
+/* Only apply these rules on screens smaller than 768px (Tablets & Phones) */
+@media (max-width: 768px) {
+  
+  /* FORCE Content to be Full Width on Mobile */
+  /* This overrides the React inline style "marginLeft: 290px" */
+  div[style*="margin-left"] {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding: 20px 15px !important; /* Reduce padding */
+  }
+
+  /* Navbar Adjustments */
+  nav {
+    padding: 0 15px !important;
+    height: 70px !important;
+  }
+
+  /* Hide Sidebar completely when closed */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Grid Stack - 1 Column on Mobile */
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  /* Card Size Adjustments for Mobile */
+  .stat-card {
+    padding: 20px;
+  }
+  
+  .stat-value {
+    font-size: 32px;
+  }
+
+  /* Login Page Adjustments */
+  .login-container {
+    padding: 30px 20px;
+    max-width: 100%;
+    margin: 10px;
+  }
+  
+  .logo-img {
+    width: 110px;
+  }
+  
+  .brand-title {
+    font-size: 22px;
+  }
+
+  /* Buttons on mobile */
+  .btn-login {
+    padding: 12px;
+    font-size: 15px;
+  }
+}
+
+/* Large Screens Enhancements (Desktops > 1400px) */
+@media (min-width: 1400px) {
+  .login-container {
+    max-width: 500px;
+    padding: 50px;
+  }
+  
+  .stat-value {
+    font-size: 42px;
+  }
+  
+  .stats-grid {
+    gap: 40px;
+  }
 }

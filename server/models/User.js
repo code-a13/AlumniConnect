@@ -11,14 +11,29 @@ const userSchema = new mongoose.Schema({
     },
     isApproved: { type: Boolean, default: false },
     
-    // --- NEW FIELDS (Important for Registration) ---
-    department: { type: String, required: true }, // e.g., CSE
-    batch: { type: String, required: true },      // e.g., 2025
-    
-    // Optional fields (Only for specific roles)
+    // IMAGE STORAGE (Base64 String)
+    profileImage: { 
+        type: String, 
+        default: "" 
+    },
+
+    // Registration Details
+    department: { type: String, required: true },
+    batch: { type: String, required: true },
     rollNumber: { type: String },                 
     currentCompany: { type: String },             
-    jobRole: { type: String }                     
+    jobRole: { type: String },
+
+    // --- PROFILE FIELDS ---
+    bio: { type: String, default: '' },
+    skills: { type: [String], default: [] }, 
+    about: { type: String, default: '' },
+    location: { type: String, default: '' },
+    socialLinks: {
+        github: { type: String, default: '' },
+        linkedin: { type: String, default: '' },
+        website: { type: String, default: '' }
+    }
 
 }, { timestamps: true });
 

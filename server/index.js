@@ -1,31 +1,42 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const cors = require('cors'); // Make sure this is imported
+const cors = require('cors');
 const connectDB = require('./config/db');
+
+// Import Routes
 const authRoutes = require('./routes/authRoutes');
+const jobRoutes = require('./routes/jobRoutes');
+const mentorshipRoutes = require('./routes/mentorshipRoutes'); // Properly Imported
 
 dotenv.config();
+
+// Connect to Database
 connectDB();
 
 const app = express();
 
-// --- CORS FIX START ---
+// --- CRITICAL FIX: INCREASE PAYLOAD LIMIT ---
+// Default is 100kb. We increase it to 50mb for Base64 Images.
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+// Middleware
 app.use(cors({
-  origin: '*', // Allow access from ANYWHERE (Phone, Laptop, Vercel)
-  methods: ["GET", "POST", "PUT", "DELETE"], // Allow these actions
+  origin: '*', // Allow access from anywhere (Localhost, Vercel, Phone)
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
-// --- CORS FIX END ---
 
-app.use(express.json());
+// --- ROUTE CONNECTIONS ---
+app.use('/api/auth', authRoutes);       // Auth & Profile
+app.use('/api/jobs', jobRoutes);        // Job Portal
+app.use('/api/mentorship', mentorshipRoutes); // Mentorship System
 
-// Routes
-app.use('/api/auth', authRoutes);
-
-// Simple Route to check if server is alive
+// Health Check Route (To see if server is alive)
 app.get('/', (req, res) => {
-    res.send("AlumniConnect Server is Running!");
+    res.send("AlumniConnect Server is Running with 50MB Upload Limit!");
 });
 
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
