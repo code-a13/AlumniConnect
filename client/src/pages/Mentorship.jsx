@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import api from '../utils/api';
+import api, { SERVER_URL } from '../utils/api'; // <--- IMPORT SERVER_URL
 import Sidebar from '../components/Sidebar';
 import toast from 'react-hot-toast';
 import { User, CheckCircle, XCircle, Send, Menu, Search, MessageSquare, Clock, Trash2 } from 'lucide-react';
@@ -7,8 +7,8 @@ import logo from '../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 
-// Initialize Socket outside to prevent multiple connections
-const socket = io.connect("http://localhost:5000");
+// --- FIXED: Use Dynamic URL for Production ---
+const socket = io.connect(SERVER_URL); 
 
 const Mentorship = () => {
   const [dataList, setDataList] = useState([]); 
@@ -33,7 +33,7 @@ const Mentorship = () => {
 
     // Listener for data refresh
     const handleNotification = () => {
-      toast('List Updated', { icon: 'Hz' });
+      toast('List Updated', { icon: '🔔' });
       refreshData();
     };
 
@@ -224,7 +224,6 @@ const Mentorship = () => {
                       <button onClick={() => handleStatusUpdate(req._id, 'Rejected', req.studentId?._id)} style={{ flex: 1, padding: '12px', background: '#fee2e2', color: '#ef4444', border: '1px solid #ef4444', borderRadius: '10px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}><XCircle size={18} /> Reject</button>
                     </div>
                   ) : (
-                    // --- ALUMNI: Chat + Remove Connection ---
                     <div style={{ display: 'flex', gap: '10px' }}>
                         <button onClick={() => navigate(`/chat/${req.studentId._id}`)} style={{ flex: 1, padding: '12px', background: '#0f284e', color: 'white', border: 'none', borderRadius: '10px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', boxShadow: '0 4px 10px rgba(15, 40, 78, 0.2)' }}>
                             <MessageSquare size={18} /> Chat
@@ -279,7 +278,6 @@ const Mentorship = () => {
                     </div>
 
                     {status === 'Accepted' ? (
-                        // --- ACCEPTED: Chat + Remove ---
                         <div style={{ display: 'flex', gap: '10px' }}>
                             <button 
                               onClick={() => navigate(`/chat/${alum._id}`)}
@@ -296,7 +294,6 @@ const Mentorship = () => {
                             </button>
                         </div>
                     ) : status === 'Pending' ? (
-                        // --- PENDING: Pending Button + Cancel (Trash) ---
                         <div style={{ display: 'flex', gap: '10px' }}>
                             <button 
                               disabled

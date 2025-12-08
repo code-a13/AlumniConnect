@@ -6,14 +6,29 @@ import Sidebar from '../components/Sidebar';
 import { Send, ArrowLeft, Phone, Video, MoreVertical } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-// Initialize Socket connection
-const socket = io.connect("http://localhost:5000");
+// --- FIXED: Dynamic Socket Connection ---
+// If we are on localhost, use port 5000. Otherwise, use the deployed Render URL.
+const SOCKET_URL = window.location.hostname === 'localhost' 
+  ? "http://localhost:5000" 
+  : "https://alumniconnect-ub5c.onrender.com";
+
+// Initialize Socket connection with the correct URL
+const socket = io.connect(SOCKET_URL);
 
 const Chat = () => {
   const { receiverId } = useParams();
   const navigate = useNavigate();
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
-  const [receiverData, setReceiverData] = useState(null); // Stores name of person we talk to
+  
+  // Safe User Parsing (prevents crash if localStorage is empty)
+  const [user, setUser] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('user'));
+    } catch (e) {
+      return null;
+    }
+  });
+
+  const [receiverData, setReceiverData] = useState(null); 
   const [message, setMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -26,12 +41,17 @@ const Chat = () => {
 
   // 2. Fetch Chat History & Receiver Details on Load
   useEffect(() => {
+    if (!user || !receiverId) return;
+
     const fetchChatData = async () => {
       try {
-        // Fetch Receiver Details (to show name in header)
+        // Fetch Receiver Details
         const userRes = await api.get(`/auth/users?id=${receiverId}`);
-        // The API returns an array, find the specific user
-        const foundUser = userRes.data.find(u => u._id === receiverId);
+        // Handle array vs single object response
+        const foundUser = Array.isArray(userRes.data) 
+          ? userRes.data.find(u => u._id === receiverId) 
+          : userRes.data;
+          
         if (foundUser) setReceiverData(foundUser);
 
         // Fetch Message History
@@ -45,8 +65,10 @@ const Chat = () => {
 
     fetchChatData();
 
-    // Socket: Join Room
-    socket.emit("join_room", user._id);
+    // Socket: Join Room (Use safe optional chaining)
+    if (user?._id) {
+        socket.emit("join_room", user._id);
+    }
 
     // Socket: Listen for messages
     const handleReceiveMessage = (data) => {
@@ -58,8 +80,16 @@ const Chat = () => {
 
     socket.on("receive_message", handleReceiveMessage);
 
-    return () => socket.off("receive_message", handleReceiveMessage);
-  }, [user._id, receiverId]);
+    // Re-join on reconnect (Important for mobile/instability)
+    socket.on("connect", () => {
+        if(user?._id) socket.emit("join_room", user._id);
+    });
+
+    return () => {
+        socket.off("receive_message", handleReceiveMessage);
+        socket.off("connect");
+    };
+  }, [user, receiverId]);
 
   // 3. Auto-scroll on new message
   useEffect(() => {
@@ -86,9 +116,12 @@ const Chat = () => {
   };
 
   const formatTime = (dateString) => {
+    if (!dateString) return "";
     const date = new Date(dateString);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
+
+  if (!user) return <div>Loading...</div>;
 
   return (
     <div style={{ height: '100vh', background: '#eef2f6', display: 'flex', overflow: 'hidden' }}>
@@ -108,21 +141,20 @@ const Chat = () => {
            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
              <button onClick={() => navigate(-1)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#555' }}><ArrowLeft size={20} /></button>
              
-             {/* Avatar with Initials */}
              {/* Avatar: Shows Image if available, otherwise shows Initials */}
-<div style={{ width: '45px', height: '45px', borderRadius: '50%', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0f284e', border: '2px solid #e5e7eb' }}>
-   {receiverData?.profileImage ? (
-      <img 
-        src={receiverData.profileImage} 
-        alt="Profile" 
-        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-      />
-   ) : (
-      <span style={{ color: 'white', fontWeight: 'bold', fontSize: '18px' }}>
-        {receiverData?.name?.charAt(0) || "?"}
-      </span>
-   )}
-</div>
+             <div style={{ width: '45px', height: '45px', borderRadius: '50%', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0f284e', border: '2px solid #e5e7eb' }}>
+               {receiverData?.profileImage ? (
+                  <img 
+                    src={receiverData.profileImage} 
+                    alt="Profile" 
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                  />
+               ) : (
+                  <span style={{ color: 'white', fontWeight: 'bold', fontSize: '18px' }}>
+                    {receiverData?.name?.charAt(0) || "?"}
+                  </span>
+               )}
+             </div>
              
              <div>
                <h3 style={{ margin: 0, fontSize: '16px', color: '#0f284e', fontWeight: 'bold' }}>

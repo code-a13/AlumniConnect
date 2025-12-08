@@ -1,13 +1,16 @@
 import axios from 'axios';
 
-// Determine the base URL based on environment
-// Ideally use import.meta.env.VITE_API_URL, but let's make it fail-safe for now
-const BASE_URL = window.location.hostname === 'localhost' 
-  ? 'http://localhost:5000/api'  // Local Development
-  : 'https://alumniconnect-ub5c.onrender.com/api'; // Live Production
+// 1. Define the Root Server URL (For Socket.io)
+// This points to the main server, NOT the /api route
+const SERVER_URL = window.location.hostname === 'localhost' 
+  ? 'http://localhost:5000'  
+  : 'https://alumniconnect-ub5c.onrender.com'; 
+
+// 2. Define the API URL (For Axios HTTP calls)
+const API_URL = `${SERVER_URL}/api`;
 
 const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json'
   }
@@ -24,4 +27,6 @@ api.interceptors.request.use((config) => {
   return Promise.reject(error);
 });
 
+// Export SERVER_URL so Chat.jsx and Mentorship.jsx can use it
+export { SERVER_URL }; 
 export default api;
