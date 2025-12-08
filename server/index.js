@@ -20,12 +20,12 @@ connectDB();
 const app = express();
 const server = http.createServer(app);
 
-// --- 1. DEFINE ALLOWED ORIGINS (CRITICAL FIX) ---
+// --- 1. DEFINE ALLOWED ORIGINS (FIXED) ---
 const allowedOrigins = [
   "http://localhost:5173",             // Local Frontend
-  "http://localhost:5000",             // Local Backend (Postman/Self)
+  "http://localhost:5000",             // Local Backend
   "https://alumniconnect-ub5c.onrender.com", // Your Deployed Backend
-  "https://alumni-connect-lovat.vercel.app/"   // <--- OR HERE (If hosted on Render)
+  "https://alumni-connect-lovat.vercel.app"  // <--- SLASH REMOVED HERE
 ];
 
 // --- 2. CONFIGURE SOCKET.IO CORS ---
@@ -33,7 +33,7 @@ const io = new Server(server, {
   cors: {
     origin: allowedOrigins,
     methods: ["GET", "POST"],
-    credentials: true // Allow cookies/headers
+    credentials: true 
   }
 });
 
