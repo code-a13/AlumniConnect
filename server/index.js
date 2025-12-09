@@ -21,7 +21,7 @@ const server = http.createServer(app);
 // --- 1. CORS CONFIGURATION (THE FIX) ---
 const allowedOrigins = [
   "http://localhost:5173",                      // For Local Development
-  "https://alumni-connect-lovat.vercel.app",
+  "https://alumniconnect.me/",
   "https://alumniconnect-ub5c.onrender.com"     // For Production (Vercel)
 ];
 
