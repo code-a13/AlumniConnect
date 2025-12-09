@@ -34,21 +34,32 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-html, body {
+/* --- THE FIX: LOCK THE BODY, SCROLL THE ROOT --- */
+html {
+  height: 100%;
+  width: 100%;
+  background-color: var(--bg-light); /* Hides white bar if bounce happens */
+}
+
+body {
   height: 100%;
   width: 100%;
   background-color: var(--bg-light);
   color: var(--text-dark);
   
-  /* CRITICAL FIX: Prevents the "White Bar" bounce effect on mobile */
-  overscroll-behavior-y: none;
+  /* CRITICAL: Lock body scroll to prevent browser "rubber banding" */
+  overflow: hidden; 
+  overscroll-behavior-y: none; 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Ensure the app takes up the full dynamic viewport height */
 #root {
-  min-height: 100dvh;
+  /* The root becomes the main scrollable window */
+  height: 100%;
+  width: 100%;
+  overflow-y: auto; /* Enables scrolling for the app content */
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -82,7 +93,8 @@ a {
    ========================================= */
 
 .login-page-wrapper {
-  min-height: 100dvh; /* Changed to 100dvh for mobile browsers */
+  /* Use 100% min-height because root is now the scroll container */
+  min-height: 100%; 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -245,7 +257,6 @@ a {
    3. DASHBOARD & LAYOUT STYLES
    ========================================= */
 
-/* Header Area */
 .header-welcome {
   display: flex;
   justify-content: space-between;
@@ -268,14 +279,12 @@ a {
   grid-template-columns: 1fr;
 }
 
-/* Tablet View: 2 Columns */
 @media (min-width: 640px) {
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* Laptop/Desktop View: 4 COLUMNS */
 @media (min-width: 1024px) {
   .stats-grid {
     grid-template-columns: repeat(4, 1fr);
@@ -343,7 +352,6 @@ a {
   animation: fadeIn 0.5s ease-out forwards;
 }
 
-/* Glass Effect Utility */
 .glass-panel {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(10px);
@@ -376,14 +384,13 @@ a {
    5. MOBILE RESPONSIVENESS (FINAL CLEAN FIX)
    ========================================= */
 
-/* Only apply these rules on screens smaller than 768px (Tablets & Phones) */
 @media (max-width: 768px) {
   
   /* 1. MASTER FIX: REMOVE SCROLL & MARGIN ISSUES */
   .main-content, div[style*="margin-left"] {
-    margin-left: 0 !important;   /* Force Sidebar margin to 0 */
-    width: 100% !important;      /* Fit width exactly */
-    overflow-x: hidden !important; /* Cut extra content */
+    margin-left: 0 !important;   
+    width: 100% !important;      
+    overflow-x: hidden !important; 
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
@@ -396,10 +403,10 @@ a {
   /* 3. NAVBAR FIXES */
   nav {
     padding: 0 15px !important;
-    height: 65px !important;
+    height: 70px !important;
   }
 
-  /* 4. GRID STACK (Force 1 Column) */
+  /* 4. GRID STACK */
   .stats-grid {
     grid-template-columns: 1fr !important;
     gap: 15px;
@@ -436,7 +443,6 @@ a {
   }
 }
 
-/* Large Screens Enhancements (Desktops > 1400px) */
 @media (min-width: 1400px) {
   .login-container {
     max-width: 500px;
@@ -452,22 +458,16 @@ a {
   }
 }
 
-/* --- GLOBAL FIX: Remove White Highlights & Focus Borders --- */
+/* --- GLOBAL FIXES --- */
 
-/* 1. Remove blue/white tap highlight on mobile for ALL elements */
-* {
-  -webkit-tap-highlight-color: transparent !important;
-  outline: none !important;
-}
-
-/* 2. Remove focus outline on buttons, links, and inputs */
+/* Remove focus outline on buttons, links, and inputs */
 button:focus, button:active, a:focus, a:active, input:focus {
   outline: none !important;
   box-shadow: none !important;
   background-color: transparent;
 }
 
-/* 3. Forces Icons (SVGs) to have transparent background */
+/* Forces Icons (SVGs) to have transparent background */
 svg {
   background-color: transparent !important;
   display: inline-block;

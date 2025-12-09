@@ -89,7 +89,9 @@ const Chat = () => {
   }, [user, receiverId]);
 
   // --- SEND MESSAGE ---
-  const sendMessage = async () => {
+  // Updated to handle form event (e) preventing page reload
+  const sendMessage = async (e) => {
+    if (e) e.preventDefault();
     if (message.trim() === "") return;
 
     const messageData = {
@@ -136,7 +138,8 @@ const Chat = () => {
   if (!user) return <div style={{display:'flex',justifyContent:'center',marginTop:'50px'}}>Loading...</div>;
 
   return (
-    <div style={{ height: '100vh', background: '#eef2f6', display: 'flex', overflow: 'hidden' }}>
+    // FIX 1: Use position:fixed inset:0 to forcefully fill the screen without "bounce"
+    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: '#eef2f6', display: 'flex', overflow: 'hidden' }}>
       
       {/* Sidebar Wrapper */}
       <div style={{ 
@@ -208,7 +211,8 @@ const Chat = () => {
             gap: '10px', 
             backgroundColor: '#eef2f6',
             backgroundImage: 'radial-gradient(#e5e7eb 1px, transparent 1px)',
-            backgroundSize: '20px 20px'
+            backgroundSize: '20px 20px',
+            WebkitOverflowScrolling: 'touch' // Ensures smooth scroll on iOS
         }}>
             {messageList.length === 0 ? (
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#9ca3af', opacity: 0.8 }}>
@@ -264,11 +268,21 @@ const Chat = () => {
         </div>
 
         {/* --- INPUT AREA (FIXED BOTTOM) --- */}
-        <div style={{ 
-            padding: '15px 20px', background: 'white', display: 'flex', alignItems: 'center', gap: '12px', 
-            borderTop: '1px solid #f3f4f6', flexShrink: 0
-        }}>
-            <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#6b7280' }} onClick={() => toast('Attachments coming soon!')}>
+        {/* FIX 2: Used <form> for mobile keyboard "Go" button & Safe Area padding */}
+        <form 
+            onSubmit={sendMessage}
+            style={{ 
+                padding: '15px 20px', 
+                background: 'white', 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '12px', 
+                borderTop: '1px solid #f3f4f6', 
+                flexShrink: 0,
+                paddingBottom: 'max(15px, env(safe-area-inset-bottom))' // Respects iPhone Home Bar
+            }}
+        >
+            <button type="button" style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#6b7280' }} onClick={() => toast('Attachments coming soon!')}>
                 <Paperclip size={20} />
             </button>
             
@@ -278,22 +292,21 @@ const Chat = () => {
                   value={message} 
                   placeholder="Type a message..." 
                   onChange={(e) => setMessage(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
                   style={{ 
                     width: '100%', padding: '12px 45px 12px 20px', borderRadius: '30px', 
-                    border: '1px solid #e5e7eb', outline: 'none', fontSize: '14px', 
-                    background: '#f9fafb', transition: 'all 0.2s', color: '#333'
+                    border: '1px solid #e5e7eb', outline: 'none', background: '#f9fafb', transition: 'all 0.2s', color: '#333',
+                    fontSize: '16px' // FIX 3: Prevents auto-zoom on iOS
                   }} 
                   onFocus={(e) => e.target.style.background = '#fff'}
                   onBlur={(e) => e.target.style.background = '#f9fafb'}
                 />
-                <button style={{ position: 'absolute', right: '12px', background: 'transparent', border: 'none', cursor: 'pointer', color: '#9ca3af' }}>
+                <button type="button" style={{ position: 'absolute', right: '12px', background: 'transparent', border: 'none', cursor: 'pointer', color: '#9ca3af' }}>
                     <Smile size={20} />
                 </button>
             </div>
 
             <button 
-                onClick={sendMessage} 
+                type="submit"
                 disabled={!message.trim()}
                 style={{ 
                     width: '45px', height: '45px', borderRadius: '50%', 
@@ -307,7 +320,7 @@ const Chat = () => {
             >
               <Send size={18} style={{ marginLeft: '2px' }} /> 
             </button>
-        </div>
+        </form>
 
       </div>
     </div>
