@@ -4,16 +4,19 @@ const sendEmail = async (email, subject, text) => {
   try {
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
-      port: 465,            // Port 465 is CRITICAL for Render
-      secure: true,         // Must be true for port 465
+      port: 587,            // Use Port 587 (TLS) instead of 465
+      secure: false,        // Must be 'false' for Port 587
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
-      // Settings to prevent timeouts on cloud servers
-      connectionTimeout: 10000, 
-      greetingTimeout: 5000,
-      socketTimeout: 10000,
+      // --- CRITICAL FIXES FOR RENDER ---
+      tls: {
+        ciphers: "SSLv3",
+        rejectUnauthorized: false, // Fixes SSL issues in cloud containers
+      },
+      // FORCE IPv4: This fixes the "Connection Timeout" on Render
+      family: 4, 
     });
 
     console.log(`Attempting to send email to: ${email}`);
@@ -25,10 +28,11 @@ const sendEmail = async (email, subject, text) => {
       text: text,
     });
 
-    console.log(" Email sent successfully. Message ID: " + info.messageId);
+    console.log("✅ Email sent successfully. Message ID: " + info.messageId);
   } catch (error) {
-    console.error(" Email NOT sent. Error:", error.message);
-    // We do NOT throw the error here so the server doesn't crash
+    console.error("❌ Email NOT sent. Error:", error.message);
+    // Log the full error object if message is vague
+    if (error.code === 'EAUTH') console.error("Check your EMAIL_USER and EMAIL_PASS in Render Environment!");
   }
 };
 
