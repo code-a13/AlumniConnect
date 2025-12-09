@@ -89,9 +89,8 @@ const Chat = () => {
   }, [user, receiverId]);
 
   // --- SEND MESSAGE ---
-  // Updated to handle form event (e) preventing page reload
   const sendMessage = async (e) => {
-    if (e) e.preventDefault();
+    if (e) e.preventDefault(); // Prevent form reload
     if (message.trim() === "") return;
 
     const messageData = {
@@ -138,8 +137,12 @@ const Chat = () => {
   if (!user) return <div style={{display:'flex',justifyContent:'center',marginTop:'50px'}}>Loading...</div>;
 
   return (
-    // FIX 1: Use position:fixed inset:0 to forcefully fill the screen without "bounce"
-    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: '#eef2f6', display: 'flex', overflow: 'hidden' }}>
+    // FIX 1: position: fixed + inset: 0 locks the window to the visible viewport
+    // This prevents the address bar/gestures from pushing content off-screen.
+    <div style={{ 
+      position: 'fixed', inset: 0, 
+      background: '#eef2f6', display: 'flex', overflow: 'hidden' 
+    }}>
       
       {/* Sidebar Wrapper */}
       <div style={{ 
@@ -159,7 +162,7 @@ const Chat = () => {
         position: 'relative'
       }}>
         
-        {/* --- HEADER --- */}
+        {/* --- HEADER (Fixed Top) --- */}
         <div style={{ 
             height: '70px', background: '#fff', padding: '0 20px', 
             display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
@@ -180,7 +183,6 @@ const Chat = () => {
                     </span>
                  )}
                </div>
-               {/* Online Dot */}
                <span style={{ position: 'absolute', bottom: '2px', right: '0', width: '10px', height: '10px', background: '#10b981', borderRadius: '50%', border: '2px solid white' }}></span>
              </div>
              
@@ -201,18 +203,18 @@ const Chat = () => {
            </div>
         </div>
 
-        {/* --- CHAT BODY (SCROLLABLE) --- */}
+        {/* --- CHAT BODY (Scrollable Middle) --- */}
         <div style={{ 
             flex: 1, 
             padding: '20px', 
-            overflowY: 'auto', 
+            overflowY: 'auto', // ONLY this part scrolls
             display: 'flex', 
             flexDirection: 'column', 
             gap: '10px', 
             backgroundColor: '#eef2f6',
             backgroundImage: 'radial-gradient(#e5e7eb 1px, transparent 1px)',
             backgroundSize: '20px 20px',
-            WebkitOverflowScrolling: 'touch' // Ensures smooth scroll on iOS
+            WebkitOverflowScrolling: 'touch' // iOS momentum scrolling
         }}>
             {messageList.length === 0 ? (
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#9ca3af', opacity: 0.8 }}>
@@ -231,7 +233,7 @@ const Chat = () => {
                             </span>
                         </div>
 
-                        {/* Messages in this group */}
+                        {/* Messages */}
                         {groupedMessages[date].map((msg, index) => {
                            const isMe = msg.senderId === user._id;
                            return (
@@ -267,8 +269,7 @@ const Chat = () => {
             <div ref={messagesEndRef} />
         </div>
 
-        {/* --- INPUT AREA (FIXED BOTTOM) --- */}
-        {/* FIX 2: Used <form> for mobile keyboard "Go" button & Safe Area padding */}
+        {/* --- INPUT AREA (Fixed Bottom) --- */}
         <form 
             onSubmit={sendMessage}
             style={{ 
@@ -279,7 +280,8 @@ const Chat = () => {
                 gap: '12px', 
                 borderTop: '1px solid #f3f4f6', 
                 flexShrink: 0,
-                paddingBottom: 'max(15px, env(safe-area-inset-bottom))' // Respects iPhone Home Bar
+                // FIX 2: Add extra padding for Gesture Navigation Bar
+                paddingBottom: 'calc(15px + env(safe-area-inset-bottom))'
             }}
         >
             <button type="button" style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#6b7280' }} onClick={() => toast('Attachments coming soon!')}>
@@ -295,7 +297,7 @@ const Chat = () => {
                   style={{ 
                     width: '100%', padding: '12px 45px 12px 20px', borderRadius: '30px', 
                     border: '1px solid #e5e7eb', outline: 'none', background: '#f9fafb', transition: 'all 0.2s', color: '#333',
-                    fontSize: '16px' // FIX 3: Prevents auto-zoom on iOS
+                    fontSize: '16px' // FIX 3: Prevents iOS zoom
                   }} 
                   onFocus={(e) => e.target.style.background = '#fff'}
                   onBlur={(e) => e.target.style.background = '#f9fafb'}
