@@ -1,13 +1,31 @@
-import React from 'react';
+import React, { useEffect } from 'react'; // Import useEffect
 import { useNavigate } from 'react-router-dom';
 import { Users, Briefcase, Calendar, ArrowRight, ChevronRight, ShieldCheck, Zap, GraduationCap } from 'lucide-react';
 import { motion } from 'framer-motion';
 import logo from '../assets/logo.png'; 
-// Use the same NetworkBackground we created earlier
 import NetworkBackground from '../components/NetworkBackground'; 
 
 const Home = () => {
   const navigate = useNavigate();
+
+  // --- FULL SCREEN LOGIC START ---
+  useEffect(() => {
+    const enableFullScreen = () => {
+      // Check if already full screen
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch((err) => {
+          console.log(`Error attempting to enable full-screen mode: ${err.message}`);
+        });
+      }
+    };
+
+    // Add listener for the first click anywhere on the page
+    window.addEventListener('click', enableFullScreen, { once: true });
+
+    // Cleanup listener
+    return () => window.removeEventListener('click', enableFullScreen);
+  }, []);
+  // --- FULL SCREEN LOGIC END ---
 
   // Animation Config
   const fadeInUp = {
@@ -31,10 +49,9 @@ const Home = () => {
       {/* 2. CONTENT WRAPPER (Z-Index 10 to sit above background) */}
       <div style={{ position: 'relative', zIndex: 10 }}>
 
-        {/* --- NAVBAR (Fixed Mobile Responsiveness) --- */}
+        {/* --- NAVBAR --- */}
         <nav style={{ 
           display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
-          // FIX: Reduced padding for mobile so buttons don't get cut off
           padding: '15px clamp(15px, 5%, 80px)', 
           background: 'rgba(15, 23, 42, 0.7)', 
           backdropFilter: 'blur(15px)',
@@ -55,13 +72,13 @@ const Home = () => {
             </h2>
           </div>
 
-          {/* Right: Buttons (Responsive Sizing) */}
+          {/* Right: Buttons */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(10px, 3vw, 20px)' }}>
             <button 
               onClick={() => navigate('/login')} 
               style={{ 
                 background: 'transparent', border: 'none', color: '#cbd5e1', fontWeight: '600', cursor: 'pointer', transition: 'color 0.3s',
-                fontSize: 'clamp(13px, 2.5vw, 16px)' // Smaller text on mobile
+                fontSize: 'clamp(13px, 2.5vw, 16px)' 
               }}
             >
               Login
@@ -71,7 +88,6 @@ const Home = () => {
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate('/register')} 
               style={{ 
-                // FIX: Dynamic padding based on screen size
                 padding: '8px clamp(16px, 4vw, 28px)', 
                 background: 'linear-gradient(90deg, #38bdf8, #2563eb)', 
                 border: 'none', borderRadius: '50px', color: 'white', fontWeight: 'bold', cursor: 'pointer',
@@ -86,16 +102,14 @@ const Home = () => {
         {/* --- HERO SECTION --- */}
         <header style={{ 
           minHeight: '85vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', 
-          textAlign: 'center', padding: '0 20px', marginTop: '-40px' // Pull up slightly
+          textAlign: 'center', padding: '0 20px', marginTop: '-40px' 
         }}>
           <motion.div initial="hidden" animate="visible" variants={stagger} style={{ maxWidth: '1000px' }}>
             
-            {/* Badge - Specific to College */}
             <motion.div variants={fadeInUp} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '8px 20px', background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '30px', color: '#38bdf8', fontSize: '12px', fontWeight: 'bold', letterSpacing: '1px', marginBottom: '30px', boxShadow: '0 0 20px rgba(56, 189, 248, 0.1)' }}>
               <GraduationCap size={16} className="animate-pulse" /> OFFICIAL CAMPUS PORTAL
             </motion.div>
 
-            {/* Headline - College Themed */}
             <motion.h1 variants={fadeInUp} style={{ fontSize: 'clamp(40px, 8vw, 80px)', fontWeight: '900', color: 'white', lineHeight: '1.1', marginBottom: '30px', textShadow: '0 10px 40px rgba(0,0,0,0.5)' }}>
               Your Campus. Your <br/>
               <span style={{ 
@@ -130,7 +144,7 @@ const Home = () => {
           </motion.div>
         </header>
 
-        {/* --- STATS SECTION (Floating Glass) --- */}
+        {/* --- STATS SECTION --- */}
         <div style={{ marginTop: '-40px', padding: '0 20px', marginBottom: '120px' }}>
           <motion.div 
             initial={{ opacity: 0, y: 50 }}

@@ -111,19 +111,24 @@ const Login = () => {
         initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6 }}
         onMouseMove={handleMouseMove}
         className="group"
-        style={{ 
-          display: 'flex', 
-          width: 'clamp(320px, 90%, 1000px)', 
-          background: 'rgba(15, 23, 42, 0.6)', 
-          backdropFilter: 'blur(20px)',
-          borderRadius: '24px',
-          border: '1px solid rgba(255,255,255,0.08)',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.6)',
-          overflow: 'hidden',
-          flexWrap: 'wrap', // Responsive Wrap
-          position: 'relative',
-          zIndex: 10
-        }}
+        // Replacement style for the Main Glass Card Wrapper
+style={{ 
+  display: 'flex', 
+  // FIX: Use '100%' width but limit with maxWidth. No minWidth that exceeds screen.
+  width: '100%', 
+  maxWidth: '1000px',
+  margin: '20px', // Add margin for spacing on mobile
+  minHeight: '600px', // Keeps it tall
+  background: 'rgba(15, 23, 42, 0.6)', 
+  backdropFilter: 'blur(20px)',
+  borderRadius: '24px',
+  border: '1px solid rgba(255,255,255,0.08)',
+  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.6)',
+  overflow: 'hidden',
+  flexWrap: 'wrap', 
+  position: 'relative',
+  zIndex: 10
+}}
       >
         {/* Spotlight Effect */}
         <motion.div style={{ background: spotlightBg, position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }} />
